@@ -1,0 +1,15 @@
+[submodule "lib/forge-std"]
+	path = lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "lib/nox-protocol-contracts"]
+	path = lib/nox-protocol-contracts
+	url = https://github.com/iExec-Nox/nox-protocol-contracts
+[submodule "lib/openzeppelin-contracts"]
+	path = lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "lib/encrypted-types"]
+	path = lib/encrypted-types
+	url = https://github.com/confidential-token-association/encrypted-types
+[submodule "lib/nox-confidential-contracts"]
+	path = lib/nox-confidential-contracts
+	url = https://github.com/iExec-Nox/nox-confidential-contracts
