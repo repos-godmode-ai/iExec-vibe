@@ -1,0 +1,148 @@
+:root {
+  font-family: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #e8e6e3;
+  background: #0d0f12;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  color: #7ab8ff;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+h2 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8a9199;
+  margin: 0 0 0.6rem;
+}
+
+p.lead {
+  color: #9aa0a6;
+  margin: 0 0 1.5rem;
+  max-width: 60ch;
+}
+
+section {
+  background: #13171c;
+  border: 1px solid #1e2329;
+  border-radius: 10px;
+  padding: 1.1rem 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #8a9199;
+  margin-bottom: 0.25rem;
+}
+
+input,
+button {
+  font: inherit;
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #2a3038;
+  background: #0d0f12;
+  color: #e8e6e3;
+  margin-bottom: 0.65rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background: #3d7ae6;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  background: #252a32;
+  color: #e8e6e3;
+}
+
+.muted {
+  color: #7a8088;
+  font-size: 0.85rem;
+  margin: 0.4rem 0 0;
+}
+
+.log {
+  font-size: 0.75rem;
+  color: #a0a6ac;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 8rem;
+  overflow: auto;
+  margin: 0.4rem 0 0;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.4rem;
+  background: #1a2330;
+  color: #8db8ff;
+  border-radius: 4px;
+}
+
+.wallet-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.25rem;
+}
+.wallet-row .addr {
+  font-size: 0.8rem;
+  color: #8a9199;
+  font-family: ui-monospace, monospace;
+}
