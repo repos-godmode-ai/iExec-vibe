@@ -36,10 +36,10 @@ After `git clone`, run:
 git submodule update --init --recursive
 ```
 
-Then install and build the UI:
+Then install, test, and build the UI:
 
 ```bash
-cd frontend && npm install && npm run build
+cd frontend && npm install && npm test && npm run lint && npm run build
 ```
 
 And compile contracts (requires [Foundry](https://book.getfoundry.sh/)):
@@ -48,6 +48,7 @@ And compile contracts (requires [Foundry](https://book.getfoundry.sh/)):
 cd contracts && forge build
 ```
 
+`npm test` runs [Vitest](https://vitest.dev/) on pure helpers (address validation, `parseEscrowFromLogs` round-trip with a synthetic log). The browser flow still needs a manual wallet + testnet check.
 ## Prerequisites
 
 - Node 20+ and `npm`
