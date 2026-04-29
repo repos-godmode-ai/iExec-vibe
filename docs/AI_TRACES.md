@@ -20,7 +20,11 @@ This repository is explicitly **vibe-coded** for the [iExec Vibe Coding Challeng
 - `contracts/src/*.sol` — smart contracts
 - `contracts/foundry.toml`, `contracts/script/Deploy.s.sol` — build and deploy
 - `contracts/lib/*` — **git submodules** (iExec Nox deps); after clone run `git submodule update --init --recursive`
-- `frontend/*` — app, Wagmi config, ABIs
+- `frontend/src/hooks/usePrivaRwaApp.ts` — single hook for state + contract calls
+- `frontend/src/abis/contracts.ts` — shared typed ABIs
+- `frontend/src/lib/*` — address checks, format, factory log parsing
+- `frontend/src/components/WalletBar.tsx` — wallet + activity UI
+
 - `feedback.md`, `docs/AI_TRACES.md`, `README.md` — submission docs
 
 ## Human steps still required

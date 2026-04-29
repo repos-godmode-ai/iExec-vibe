@@ -49,22 +49,28 @@ contract RwaConfidentialEscrow is ReentrancyGuard {
         _;
     }
 
-    /// @notice After KYC/conditions, buyer instructs the escrow to pay the full confidential balance to the seller.
-    function releaseToSeller() external onlyBuyer nonReentrant {
+    function _requireOpen() private view {
         if (released || refunded) revert RwaAlreadySettled();
+    }
+
+    function _escrowBalance() private view returns (euint256) {
         euint256 bal = cToken.confidentialBalanceOf(address(this));
         if (!Nox.isInitialized(bal)) revert RwaEmptyBalance();
-        cToken.confidentialTransferFrom(address(this), seller, bal);
+        return bal;
+    }
+
+    /// @notice After KYC/conditions, buyer instructs the escrow to pay the full confidential balance to the seller.
+    function releaseToSeller() external onlyBuyer nonReentrant {
+        _requireOpen();
+        cToken.confidentialTransferFrom(address(this), seller, _escrowBalance());
         released = true;
         emit RwaRelease(dealRef, seller);
     }
 
     /// @notice Cancel the deal and return the full confidential escrow balance to the buyer.
     function refundToBuyer() external onlyBuyer nonReentrant {
-        if (released || refunded) revert RwaAlreadySettled();
-        euint256 bal = cToken.confidentialBalanceOf(address(this));
-        if (!Nox.isInitialized(bal)) revert RwaEmptyBalance();
-        cToken.confidentialTransferFrom(address(this), buyer, bal);
+        _requireOpen();
+        cToken.confidentialTransferFrom(address(this), buyer, _escrowBalance());
         refunded = true;
         emit RwaRefund(dealRef, buyer);
     }
@@ -72,10 +78,8 @@ contract RwaConfidentialEscrow is ReentrancyGuard {
     /// @notice Lets the seller repudiate: sends funds back to the buyer (e.g. failed RWA deliverable).
     function rejectBySeller() external nonReentrant {
         if (msg.sender != seller) revert RwaNotSeller();
-        if (released || refunded) revert RwaAlreadySettled();
-        euint256 bal = cToken.confidentialBalanceOf(address(this));
-        if (!Nox.isInitialized(bal)) revert RwaEmptyBalance();
-        cToken.confidentialTransferFrom(address(this), buyer, bal);
+        _requireOpen();
+        cToken.confidentialTransferFrom(address(this), buyer, _escrowBalance());
         refunded = true;
         emit RwaRefund(dealRef, buyer);
     }
