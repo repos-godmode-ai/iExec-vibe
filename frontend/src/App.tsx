@@ -2,6 +2,7 @@ import { useChainId } from 'wagmi'
 import { CUSDC_HELP, defaultChain, explorerBase } from './config'
 import { usePrivaRwaApp } from './hooks/usePrivaRwaApp'
 import { ActivityLog, ExplorerHint, WalletBar } from './components/WalletBar'
+import { SubmissionChecklist } from './components/SubmissionChecklist'
 
 export default function App() {
   const ac = usePrivaRwaApp()
@@ -15,6 +16,18 @@ export default function App() {
         confidential cUSDC stays encrypted; settlement actions are public. Built for the iExec Vibe Coding
         Challenge.
       </p>
+
+      <SubmissionChecklist
+        isConnected={ac.isConnected}
+        needSwitch={ac.needSwitch}
+        chainId={liveChainId}
+        cValid={ac.cValid}
+        factory={ac.factory}
+        escrow={ac.escrow}
+        hasFundedEscrow={ac.hasFundedEscrow}
+        wrapSucceeded={ac.wrapSucceeded}
+        settled={ac.settled}
+      />
 
       <WalletBar
         isConnected={ac.isConnected}

@@ -14,6 +14,7 @@ End-to-end dApp for the [iExec Vibe Coding Challenge](https://dorahacks.io/hacka
 | No mock-only path | All reads/writes are real Sepolia + gateway calls when configured |
 | Arbitrum Sepolia deployment | You deploy the factory; app reads live contracts |
 | `feedback.md` | [feedback.md](./feedback.md) |
+| Full rules, checklist, glossary | [docs/REQUIREMENTS.md](./docs/REQUIREMENTS.md) |
 | AI / vibe coding trace | [docs/AI_TRACES.md](./docs/AI_TRACES.md) |
 | 4 min video | Record a screen capture of: connect → wrap → create escrow → fund (encrypted) → release/refund (record locally; not in repo) |
 
@@ -26,6 +27,7 @@ RWA buyers and issuers need **settlement** without advertising exact ticket size
 ```
 contracts/          Foundry: escrow + factory; lib/ = git submodules
 frontend/           Vite + React + Wagmi + @iexec-nox/handle
+docs/REQUIREMENTS.md  DoraHacks rules, scope, demo checklist
 docs/AI_TRACES.md   Cursor / AI build log
 feedback.md         iExec tooling feedback
 ```
@@ -77,7 +79,7 @@ forge verify-contract --chain 421614 --verifier arbitrum-sepolia <factory> src/R
 cd frontend
 cp .env.example .env
 # Edit: VITE_FACTORY_ADDRESS=0xYourFactory
-# Optional: VITE_CTOKEN_ADDRESS, VITE_ARBITRUM_SEPOLIA_RPC
+# Optional: VITE_CTOKEN_ADDRESS, VITE_GITHUB_REPO (for in-app link to docs/REQUIREMENTS.md), VITE_ARBITRUM_SEPOLIA_RPC
 npm run dev
 ```
 

@@ -19,5 +19,8 @@ export const factoryFromEnv = import.meta.env.VITE_FACTORY_ADDRESS as
   | undefined
 export const explorerBase = 'https://sepolia.arbiscan.io'
 
+/** If set, README / checklist links in the app point to your public repo. */
+export const GITHUB_REPO_URL = (import.meta.env.VITE_GITHUB_REPO as string | undefined)?.replace(/\/$/, '')
+
 export const CUSDC_HELP =
   'Use the Confidential DeFi app at cdefi.iex.ec on Arbitrum Sepolia: get test ETH and USDC from the faucet, then wrap to cUSDC. Copy the cUSDC (ERC-7984) contract address into the field below.'

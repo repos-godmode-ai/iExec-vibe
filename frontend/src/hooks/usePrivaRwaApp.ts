@@ -52,15 +52,35 @@ export function usePrivaRwaApp() {
   const { log, add, clear: clearLog } = useActivityLog()
   const { busy, run } = useWithBusy()
 
-  const [cToken, setCToken] = useState<`0x${string}`>(() => cTokenFromEnv ?? ZERO_ADDRESS)
+  const [cToken, setCTokenState] = useState<`0x${string}`>(() => cTokenFromEnv ?? ZERO_ADDRESS)
   const [factory, setFactory] = useState<`0x${string}` | ''>(factoryFromEnv ?? '')
   const [underlying, setUnderlying] = useState<`0x${string}`>(DEFAULT_UNDERLYING)
-  const [escrow, setEscrow] = useState<`0x${string}` | null>(null)
+  const [escrow, setEscrowState] = useState<`0x${string}` | null>(null)
   const [seller, setSeller] = useState('')
   const [dealLabel, setDealLabel] = useState('RWA-001')
   const [fundAmount, setFundAmount] = useState('1')
   const [plainBuyerBal, setPlainBuyerBal] = useState<string | null>(null)
   const [plainEscrowBal, setPlainEscrowBal] = useState<string | null>(null)
+  const [wrapSucceeded, setWrapSucceeded] = useState(false)
+  const [fundedThisEscrow, setFundedThisEscrow] = useState(false)
+
+  const setCToken = useCallback((next: `0x${string}`) => {
+    setCTokenState((prev) => {
+      if (next !== prev) {
+        setWrapSucceeded(false)
+      }
+      return next
+    })
+  }, [])
+
+  const setEscrow = useCallback((next: `0x${string}` | null) => {
+    setEscrowState((prev) => {
+      if (next !== prev) {
+        setFundedThisEscrow(false)
+      }
+      return next
+    })
+  }, [])
 
   const cValid = Boolean(cToken && cToken !== ZERO_ADDRESS)
   const needSwitch = isConnected && chainId !== chain.id
@@ -248,7 +268,7 @@ export function usePrivaRwaApp() {
         add({ kind: 'err', text: formatTxError(e) })
       }
     })
-  }, [publicClient, writeContractAsync, factory, seller, cToken, cValid, dealLabel, add, run, invalidateReads])
+  }, [publicClient, writeContractAsync, factory, seller, cToken, cValid, dealLabel, add, run, invalidateReads, setEscrow])
 
   const fundEscrow = useCallback(() => {
     if (!walletClient || !escrow) {
@@ -277,6 +297,7 @@ export function usePrivaRwaApp() {
           chain,
         })) as Hash
         await publicClient.waitForTransactionReceipt({ hash })
+        setFundedThisEscrow(true)
         add({ kind: 'ok', text: `Funded escrow. Tx: ${hash}` })
         setPlainEscrowBal(null)
         invalidateReads()
@@ -332,6 +353,7 @@ export function usePrivaRwaApp() {
           chain,
         })) as Hash
         await publicClient.waitForTransactionReceipt({ hash: h2 })
+        setWrapSucceeded(true)
         add({ kind: 'ok', text: 'Wrap complete. You can fund the escrow with the same amount.' })
         void refetchErc20()
         invalidateReads()
@@ -439,6 +461,8 @@ export function usePrivaRwaApp() {
     eSeller,
     eReleased,
     eRefunded,
+    wrapSucceeded,
+    hasFundedEscrow: fundedThisEscrow,
     settled,
     isBuyer,
     isSeller,

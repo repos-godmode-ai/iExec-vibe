@@ -145,6 +145,52 @@ input[type='text'] {
   font-size: 0.9em;
 }
 
+.pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7ab8ff;
+  background: #1a2330;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-right: 0.35rem;
+  vertical-align: middle;
+}
+
+.checklist .checklist-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #1e2329;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.checklist-item:last-child {
+  border-bottom: none;
+}
+.checklist-pill {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  background: #2a2420;
+  color: #c9a227;
+  border: 1px solid #3d3528;
+}
+.checklist-item--done .checklist-pill {
+  background: #1a2e24;
+  color: #5fd48a;
+  border-color: #2a4a38;
+}
 .wallet-row {
   display: flex;
   flex-wrap: wrap;
