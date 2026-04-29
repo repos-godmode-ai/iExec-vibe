@@ -163,6 +163,11 @@ input[type='text'] {
   margin: 0.75rem 0 0;
   padding: 0;
 }
+.checklist-progress {
+  font-size: 0.8rem;
+  color: #6d7379;
+  margin: 0.4rem 0 0;
+}
 .checklist-item {
   display: flex;
   align-items: flex-start;

@@ -24,6 +24,7 @@ import { irc7984Abi, rwaEscrowAbi, escrowFactoryAbi, erc20Abi, wrapper7984Abi } 
 import { isEmptyHandle, toAddress } from '../lib/address'
 import { formatAmountLabel, shortHandle, shortHex } from '../lib/format'
 import { parseEscrowFromLogs } from '../lib/parseFactoryEvent'
+import { checklistFundDone, checklistWrapDone } from '../lib/checklistProgress'
 import { useActivityLog } from './useActivityLog'
 import { useWithBusy } from './useWithBusy'
 import { formatTxError } from '../lib/txError'
@@ -413,6 +414,15 @@ export function usePrivaRwaApp() {
   )
   const settled = Boolean(eReleased) || Boolean(eRefunded)
 
+  const wrapStepDone = useMemo(
+    () => checklistWrapDone(wrapSucceeded, cValid, hBuyer as Hex | undefined),
+    [wrapSucceeded, cValid, hBuyer],
+  )
+  const fundStepDone = useMemo(
+    () => checklistFundDone(fundedThisEscrow, cValid, escrow, hEscrow as Hex | undefined),
+    [fundedThisEscrow, cValid, escrow, hEscrow],
+  )
+
   return {
     address,
     isConnected,
@@ -463,6 +473,8 @@ export function usePrivaRwaApp() {
     eRefunded,
     wrapSucceeded,
     hasFundedEscrow: fundedThisEscrow,
+    wrapStepDone,
+    fundStepDone,
     settled,
     isBuyer,
     isSeller,

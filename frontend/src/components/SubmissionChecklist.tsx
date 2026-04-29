@@ -9,8 +9,8 @@ type Props = {
   cValid: boolean
   factory: string
   escrow: `0x${string}` | null
-  hasFundedEscrow: boolean
-  wrapSucceeded: boolean
+  wrapStepDone: boolean
+  fundStepDone: boolean
   settled: boolean
 }
 
@@ -25,13 +25,16 @@ export function SubmissionChecklist({
   cValid,
   factory,
   escrow,
-  hasFundedEscrow,
-  wrapSucceeded,
+  wrapStepDone,
+  fundStepDone,
   settled,
 }: Props) {
   const onSepolia = isConnected && !needSwitch && chainId === defaultChain.id
   const factoryFromUser = isValidEvmAddress(factory)
   const factoryOk = Boolean(factoryFromEnv) || factoryFromUser
+
+  const itemStates = [onSepolia, cValid, factoryOk, Boolean(escrow), wrapStepDone, fundStepDone, settled]
+  const doneCount = itemStates.filter(Boolean).length
 
   const items: { id: string; done: boolean; children: ReactNode }[] = [
     {
@@ -72,19 +75,19 @@ export function SubmissionChecklist({
     },
     {
       id: 'wrap',
-      done: wrapSucceeded,
+      done: wrapStepDone,
       children: (
         <>
-          <strong>Wrap</strong> USDC → cUSDC (at least once in this session)
+          <strong>Wrap</strong> USDC → cUSDC (session or you already have cUSDC — balance handle on-chain)
         </>
       ),
     },
     {
       id: 'fund',
-      done: hasFundedEscrow,
+      done: fundStepDone,
       children: (
         <>
-          <strong>Fund</strong> escrow with encrypted amount (Nox)
+          <strong>Fund</strong> escrow with encrypted amount (Nox); also counts if escrow already holds cUSDC
         </>
       ),
     },
@@ -116,8 +119,11 @@ export function SubmissionChecklist({
           <code>docs/REQUIREMENTS.md</code>
         )}{' '}
         in the repo. Also ship <code>feedback.md</code>, a ≤4 min video, and an X post tagging @iEx_ec and
-        @Chain_GPT. Set <code>VITE_GITHUB_REPO</code> in <code>frontend/.env</code> to turn the doc link
+        @Chain_GPT.         Set <code>VITE_GITHUB_REPO</code> in <code>frontend/.env</code> to turn the doc link
         clickable.
+      </p>
+      <p className="checklist-progress" role="status" aria-label="Checklist progress">
+        {doneCount} of {itemStates.length} complete
       </p>
       <ul className="checklist-list">
         {items.map((row) => (
@@ -137,15 +143,18 @@ export function SubmissionChecklist({
           if (!escrow) {
             return 'Create an escrow with seller and deal ref.'
           }
-          if (!hasFundedEscrow) {
-            return 'Wrap USDC to cUSDC if needed, then fund the escrow (encrypted transfer).'
+          if (!wrapStepDone) {
+            return 'Wrap USDC to cUSDC in cdefi or with the app (or you already have a cUSDC balance on-chain).'
+          }
+          if (!fundStepDone) {
+            return 'Fund the escrow with an encrypted transfer (or the escrow already holds cUSDC).'
           }
           if (!settled) {
             return null
           }
           return 'On-chain path is complete. Export your video, keep the repo public, and post on X with @iEx_ec and @Chain_GPT.'
         })()}{' '}
-        {onSepolia && cValid && factoryOk && escrow && hasFundedEscrow && !settled ? (
+        {onSepolia && cValid && factoryOk && escrow && fundStepDone && !settled ? (
           <>
             Complete <strong>release</strong>, <strong>refund</strong>, or <strong>reject</strong> on-chain, then
             record a ≤4 min demo video. Commit <code>feedback.md</code> and post on X (see{' '}

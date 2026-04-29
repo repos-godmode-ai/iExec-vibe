@@ -24,8 +24,8 @@ export default function App() {
         cValid={ac.cValid}
         factory={ac.factory}
         escrow={ac.escrow}
-        hasFundedEscrow={ac.hasFundedEscrow}
-        wrapSucceeded={ac.wrapSucceeded}
+        wrapStepDone={ac.wrapStepDone}
+        fundStepDone={ac.fundStepDone}
         settled={ac.settled}
       />
 
