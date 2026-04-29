@@ -35,6 +35,18 @@ h1 {
   margin: 0 0 0.35rem;
 }
 
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.section-head h2 {
+  margin: 0;
+}
+
 h2 {
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -125,13 +137,12 @@ input[type='text'] {
   margin: 0.4rem 0 0;
 }
 
-.pill {
-  display: inline-block;
-  font-size: 0.7rem;
-  padding: 0.15rem 0.4rem;
-  background: #1a2330;
-  color: #8db8ff;
-  border-radius: 4px;
+.tx-link {
+  color: #9bc4ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9em;
 }
 
 .wallet-row {

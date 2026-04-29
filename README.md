@@ -91,7 +91,10 @@ npm run build
 # serve ./frontend/dist/ with any static host; same env vars as above
 ```
 
-## License
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs `forge build` on `contracts/` and `npm ci && npm test && npm run lint && npm run build` on `frontend/` on pushes to `main` and `cursor/**` branches.
+
 
 MIT — see [contracts](contracts/src) and `frontend` package metadata.
 

@@ -198,7 +198,7 @@ export default function App() {
         </section>
       ) : null}
 
-      <ActivityLog log={ac.log} />
+      <ActivityLog log={ac.log} onClear={ac.clearLog} />
       <ExplorerHint />
     </div>
   )

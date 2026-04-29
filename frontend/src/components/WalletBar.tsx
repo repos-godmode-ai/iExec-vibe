@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react'
 import type { LogLine } from '../hooks/useActivityLog'
 import { explorerBase } from '../config'
 import { shortHex } from '../lib/format'
+import { linkifyTxLogLine, txUrl } from '../lib/explorer'
 
 type Props = {
   isConnected: boolean
@@ -56,14 +58,32 @@ export function WalletBar({
   )
 }
 
-export function ActivityLog({ log }: { log: LogLine[] }) {
+function renderLogText(text: string): ReactNode {
+  const bits = linkifyTxLogLine(text)
+  return bits.map((b, i) =>
+    typeof b === 'string' ? (
+      <span key={i}>{b}</span>
+    ) : (
+      <a key={i} href={txUrl(b.hash)} target="_blank" rel="noreferrer" className="tx-link">
+        {b.hash.slice(0, 10)}…{b.hash.slice(-6)}
+      </a>
+    ),
+  )
+}
+
+export function ActivityLog({ log, onClear }: { log: LogLine[]; onClear: () => void }) {
   if (log.length === 0) return null
   return (
     <section>
-      <h2>Activity / trace</h2>
+      <div className="section-head">
+        <h2>Activity / trace</h2>
+        <button type="button" className="btn btn-ghost" onClick={onClear}>
+          Clear
+        </button>
+      </div>
       {log.map((l, i) => (
         <p key={i} className="log" data-kind={l.kind}>
-          [{l.kind}] {l.text}
+          [{l.kind}] {renderLogText(l.text)}
         </p>
       ))}
     </section>

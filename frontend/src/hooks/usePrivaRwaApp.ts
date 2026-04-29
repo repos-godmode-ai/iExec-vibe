@@ -12,7 +12,7 @@ import {
   useSwitchChain,
 } from 'wagmi'
 import { createViemHandleClient } from '@iexec-nox/handle'
-import { type Hex, keccak256, stringToBytes, parseUnits, type Hash } from 'viem'
+import { type Hex, keccak256, stringToBytes, type Hash } from 'viem'
 import {
   cTokenFromEnv,
   factoryFromEnv,
@@ -26,6 +26,8 @@ import { formatAmountLabel, shortHandle, shortHex } from '../lib/format'
 import { parseEscrowFromLogs } from '../lib/parseFactoryEvent'
 import { useActivityLog } from './useActivityLog'
 import { useWithBusy } from './useWithBusy'
+import { formatTxError } from '../lib/txError'
+import { safeParseUnits } from '../lib/parseAmount'
 
 const chain = defaultChain
 const cTokenRead = { chainId: chain.id, abi: irc7984Abi, address: ZERO_ADDRESS as `0x${string}` }
@@ -224,23 +226,27 @@ export function usePrivaRwaApp() {
       return
     }
     void run(async () => {
-      const dealRef = keccak256(stringToBytes(dealLabel || 'deal')) as `0x${string}`
-      const hash = (await writeContractAsync({
-        address: f,
-        abi: escrowFactoryAbi,
-        functionName: 'createEscrow',
-        args: [cToken, s, dealRef],
-        chain,
-      })) as Hash
-      const receipt = await publicClient.waitForTransactionReceipt({ hash })
-      const ex = parseEscrowFromLogs(receipt.logs)
-      if (ex) {
-        setEscrow(ex)
-        add({ kind: 'ok', text: `Escrow: ${ex}` })
-        invalidateReads()
-        return
+      try {
+        const dealRef = keccak256(stringToBytes(dealLabel || 'deal')) as `0x${string}`
+        const hash = (await writeContractAsync({
+          address: f,
+          abi: escrowFactoryAbi,
+          functionName: 'createEscrow',
+          args: [cToken, s, dealRef],
+          chain,
+        })) as Hash
+        const receipt = await publicClient.waitForTransactionReceipt({ hash })
+        const ex = parseEscrowFromLogs(receipt.logs)
+        if (ex) {
+          setEscrow(ex)
+          add({ kind: 'ok', text: `Escrow: ${ex}` })
+          invalidateReads()
+          return
+        }
+        add({ kind: 'err', text: 'Could not parse escrow from tx logs. Open the hash on Arbiscan to verify the factory event.' })
+      } catch (e) {
+        add({ kind: 'err', text: formatTxError(e) })
       }
-      add({ kind: 'err', text: 'Could not parse escrow from tx logs. Open the hash on Arbiscan to verify the factory event.' })
     })
   }, [publicClient, writeContractAsync, factory, seller, cToken, cValid, dealLabel, add, run, invalidateReads])
 
@@ -254,21 +260,29 @@ export function usePrivaRwaApp() {
       return
     }
     void run(async () => {
-      if (!publicClient) throw new Error('No public client')
-      const hc = await createViemHandleClient(walletClient)
-      const v = parseUnits(fundAmount, dec)
-      const { handle, handleProof } = await hc.encryptInput(v, 'uint256', cToken)
-      const hash = (await writeContractAsync({
-        address: cToken,
-        abi: irc7984Abi,
-        functionName: 'confidentialTransfer',
-        args: [escrow, handle, handleProof as Hex],
-        chain,
-      })) as Hash
-      await publicClient.waitForTransactionReceipt({ hash })
-      add({ kind: 'ok', text: `Funded escrow. Tx: ${hash}` })
-      setPlainEscrowBal(null)
-      invalidateReads()
+      try {
+        if (!publicClient) throw new Error('No public client')
+        const parsed = safeParseUnits(fundAmount, dec)
+        if (!parsed.ok) {
+          add({ kind: 'err', text: parsed.error })
+          return
+        }
+        const hc = await createViemHandleClient(walletClient)
+        const { handle, handleProof } = await hc.encryptInput(parsed.value, 'uint256', cToken)
+        const hash = (await writeContractAsync({
+          address: cToken,
+          abi: irc7984Abi,
+          functionName: 'confidentialTransfer',
+          args: [escrow, handle, handleProof as Hex],
+          chain,
+        })) as Hash
+        await publicClient.waitForTransactionReceipt({ hash })
+        add({ kind: 'ok', text: `Funded escrow. Tx: ${hash}` })
+        setPlainEscrowBal(null)
+        invalidateReads()
+      } catch (e) {
+        add({ kind: 'err', text: formatTxError(e) })
+      }
     })
   }, [walletClient, escrow, dec, fundAmount, cToken, publicClient, writeContractAsync, add, run, invalidateReads])
 
@@ -285,36 +299,45 @@ export function usePrivaRwaApp() {
       add({ kind: 'err', text: 'Set cToken first.' })
       return
     }
-    const want = parseUnits(fundAmount, dec)
+    const parsed = safeParseUnits(fundAmount, dec)
+    if (!parsed.ok) {
+      add({ kind: 'err', text: parsed.error })
+      return
+    }
     void run(async () => {
-      const a = (await publicClient.readContract({
-        address: underlyingAddr,
-        abi: erc20Abi,
-        functionName: 'allowance',
-        args: [address, cToken],
-      })) as bigint
-      if (a < want) {
-        const h1 = (await writeContractAsync({
+      try {
+        if (!publicClient) throw new Error('No public client')
+        const a = (await publicClient.readContract({
           address: underlyingAddr,
           abi: erc20Abi,
-          functionName: 'approve',
-          args: [cToken, 2n ** 256n - 1n],
+          functionName: 'allowance',
+          args: [address, cToken],
+        })) as bigint
+        if (a < parsed.value) {
+          const h1 = (await writeContractAsync({
+            address: underlyingAddr,
+            abi: erc20Abi,
+            functionName: 'approve',
+            args: [cToken, 2n ** 256n - 1n],
+            chain,
+          })) as Hash
+          await publicClient.waitForTransactionReceipt({ hash: h1 })
+          add({ kind: 'info', text: 'Approval confirmed.' })
+        }
+        const h2 = (await writeContractAsync({
+          address: cToken,
+          abi: wrapper7984Abi,
+          functionName: 'wrap',
+          args: [address, parsed.value],
           chain,
         })) as Hash
-        await publicClient.waitForTransactionReceipt({ hash: h1 })
-        add({ kind: 'info', text: 'Approval confirmed.' })
+        await publicClient.waitForTransactionReceipt({ hash: h2 })
+        add({ kind: 'ok', text: 'Wrap complete. You can fund the escrow with the same amount.' })
+        void refetchErc20()
+        invalidateReads()
+      } catch (e) {
+        add({ kind: 'err', text: formatTxError(e) })
       }
-      const h2 = (await writeContractAsync({
-        address: cToken,
-        abi: wrapper7984Abi,
-        functionName: 'wrap',
-        args: [address, want],
-        chain,
-      })) as Hash
-      await publicClient.waitForTransactionReceipt({ hash: h2 })
-      add({ kind: 'ok', text: 'Wrap complete. You can fund the escrow with the same amount.' })
-      void refetchErc20()
-      invalidateReads()
     })
   }, [
     publicClient,
@@ -339,16 +362,20 @@ export function usePrivaRwaApp() {
         return
       }
       void run(async () => {
-        const h = (await writeContractAsync({
-          address: escrow,
-          abi: rwaEscrowAbi,
-          functionName: fn,
-          chain,
-        })) as Hash
-        await publicClient.waitForTransactionReceipt({ hash: h })
-        add({ kind: 'ok', text: `${label}: ${h}` })
-        setPlainEscrowBal(null)
-        invalidateReads()
+        try {
+          const h = (await writeContractAsync({
+            address: escrow,
+            abi: rwaEscrowAbi,
+            functionName: fn,
+            chain,
+          })) as Hash
+          await publicClient.waitForTransactionReceipt({ hash: h })
+          add({ kind: 'ok', text: `${label}: ${h}` })
+          setPlainEscrowBal(null)
+          invalidateReads()
+        } catch (e) {
+          add({ kind: 'err', text: formatTxError(e) })
+        }
       })
     },
     [escrow, publicClient, writeContractAsync, add, run, invalidateReads],
