@@ -11,7 +11,7 @@ This document is required for the [iExec Vibe Coding Challenge](https://dorahack
 
 ## Friction and improvement ideas
 
-- **Discovering wrapper (cToken) addresses** for a specific underlying on Arbitrum Sepolia required using the official [Confidential DeFi demo](https://cdefi.iex.ec) and copying contract addresses from the UI. A single “deployed contracts” table in the docs (chain id, symbol, underlying, wrapper) would speed up integration.
+- **Discovering wrapper (cToken) addresses** for a specific underlying on Arbitrum Sepolia is easier now that the app ships **default** `DEFAULT_UNDERLYING` (USDC) and `DEFAULT_CTOKEN` (cUSDC) for the official pair, with `VITE_CTOKEN_ADDRESS` and the [cdefi wizard](https://cdefi-wizard.iex.ec) for custom deployments. A single “deployed contracts” table in the docs (chain id, symbol, underlying, wrapper) would still help other networks.
 - **Foundry + npm remapping** for `encrypted-types` and multi-repo dependencies is standard for advanced users but can trip first-time builders; a small `foundry.toml` template in the Nox “Build a dApp” guide would help.
 - **Operator / `confidentialTransferFrom` for contracts**: Escrow contracts that move the *full* encrypted balance need the token’s operator model or a pattern that passes the live `euint256` from `confidentialBalanceOf` into `confidentialTransferFrom(from, to, amount)` after the token has granted the escrow transient ACL on that handle. The learning curve is worth it, but a short “escrow cookbook” would reduce trial and error.
 

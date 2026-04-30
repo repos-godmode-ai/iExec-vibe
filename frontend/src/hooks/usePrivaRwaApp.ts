@@ -16,6 +16,7 @@ import { type Hex, keccak256, stringToBytes, type Hash } from 'viem'
 import {
   cTokenFromEnv,
   factoryFromEnv,
+  DEFAULT_CTOKEN,
   DEFAULT_UNDERLYING,
   ZERO_ADDRESS,
   defaultChain,
@@ -54,7 +55,7 @@ export function usePrivaRwaApp() {
   const { log, add, clear: clearLog } = useActivityLog()
   const { busy, run } = useWithBusy()
 
-  const [cToken, setCTokenState] = useState<`0x${string}`>(() => cTokenFromEnv ?? ZERO_ADDRESS)
+  const [cToken, setCTokenState] = useState<`0x${string}`>(() => cTokenFromEnv ?? DEFAULT_CTOKEN)
   const [factory, setFactory] = useState<`0x${string}` | ''>(factoryFromEnv ?? '')
   const [underlying, setUnderlying] = useState<`0x${string}`>(DEFAULT_UNDERLYING)
   const [escrow, setEscrowState] = useState<`0x${string}` | null>(null)

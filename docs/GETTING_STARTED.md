@@ -2,6 +2,27 @@
 
 This is a **practical** list of what you need for a working **Arbitrum Sepolia** demo. The full rule set is in [REQUIREMENTS.md](./REQUIREMENTS.md).
 
+## Official test token pair (Arbitrum Sepolia)
+
+Shared by the iExec team for this stack (you can also deploy a **custom** cUSDC via the [cdefi wizard](https://cdefi-wizard.iex.ec)):
+
+| Token | Address |
+|-------|---------|
+| **USDC** (underlying) | `0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d` |
+| **cUSDC** (ERC-7984) | `0x1CCeC6bC60dB15E4055D43Dc2531BB7D4E5B808e` |
+
+The front end **defaults** to this cUSDC; set `VITE_CTOKEN_ADDRESS` only to override.
+
+## iExec resources (Nox, Hello World, faucets)
+
+- [Nox — getting started](https://docs.iex.ec/nox-protocol/getting-started/welcome)
+- [Hello World (E2E Nox)](https://docs.iex.ec/nox-protocol/getting-started/hello-world)
+- [cdefi — demo & USDC / wrap / faucet](https://cdefi.iex.ec)
+- [cdefi wizard — custom confidential token](https://cdefi-wizard.iex.ec)
+- [RLC faucet — Arbitrum Sepolia](https://explorer.iex.ec/arbitrum-sepolia-testnet/account?accountTab=Faucet)
+- [@iexec-nox packages on npm](https://www.npmjs.com/org/iexec-nox?activeTab=packages)
+- [iExec developer hub (linktree)](https://linktr.ee/iexec.tech)
+
 ## 1. One-time setup
 
 | You need | Why |
@@ -23,11 +44,11 @@ cd ../frontend && npm install && npm test && npm run build
 
 | Asset | How |
 |-------|-----|
-| **ETH on Arbitrum Sepolia** | Faucet (e.g. [cdefi](https://cdefi.iex.ec) or [Arbitrum docs](https://docs.arbitrum.io/)) — pays gas |
-| **Test USDC** | From the same **Confidential DeFi** / cdefi flow on Arbitrum Sepolia |
-| **cUSDC (cToken, ERC-7984)** | **Wrap** USDC in cdefi or with the app; copy the **cToken contract address** into the UI or `VITE_CTOKEN_ADDRESS` |
+| **ETH on Arbitrum Sepolia** | [cdefi](https://cdefi.iex.ec), [RLC / explorer faucet](https://explorer.iex.ec/arbitrum-sepolia-testnet/account?accountTab=Faucet), or [Arbitrum docs](https://docs.arbitrum.io/) — pays gas |
+| **Test USDC** | [cdefi](https://cdefi.iex.ec) faucet / Confidential DeFi flow |
+| **cUSDC (cToken)** | App defaults to official address above; **wrap** USDC in-app or in cdefi; use [wizard](https://cdefi-wizard.iex.ec) for your own wrapper |
 
-Without a real cToken address, `name` / `decimals` reads fail and wrap/fund will not work.
+Without a real cToken address (default or `VITE_CTOKEN_ADDRESS`), `name` / `decimals` reads fail and wrap/fund will not work.
 
 ## 3. Deploy the factory (once per team)
 

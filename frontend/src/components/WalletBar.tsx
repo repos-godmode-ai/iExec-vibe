@@ -93,7 +93,11 @@ export function ActivityLog({ log, onClear }: { log: LogLine[]; onClear: () => v
 export function ExplorerHint() {
   return (
     <p className="muted">
-      Explorer: {explorerBase} — search your escrow or cToken. Build log: <code>docs/AI_TRACES.md</code>. Hackathon:{' '}
+      Explorer: {explorerBase} — search your escrow or cToken. Nox docs:{' '}
+      <a href="https://docs.iex.ec/nox-protocol/getting-started/hello-world" target="_blank" rel="noreferrer">
+        Hello World
+      </a>
+      . Build log: <code>docs/AI_TRACES.md</code>. Hackathon:{' '}
       <a href="https://dorahacks.io/hackathon/vibe-coding-iexec/detail" target="_blank" rel="noreferrer">
         DoraHacks iExec Vibe Coding
       </a>

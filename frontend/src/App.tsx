@@ -1,9 +1,16 @@
 import { useChainId } from 'wagmi'
-import { CUSDC_HELP, defaultChain, explorerBase } from './config'
+import {
+  CUSDC_HELP,
+  DEFAULT_CTOKEN,
+  DEFAULT_UNDERLYING,
+  defaultChain,
+  explorerBase,
+} from './config'
 import { usePrivaRwaApp } from './hooks/usePrivaRwaApp'
 import { ActivityLog, ExplorerHint, WalletBar } from './components/WalletBar'
 import { SubmissionChecklist } from './components/SubmissionChecklist'
 import { NextStepsPanel } from './components/NextStepsPanel'
+import { IexecResourceLinks } from './components/IexecResourceLinks'
 
 export default function App() {
   const ac = usePrivaRwaApp()
@@ -55,6 +62,11 @@ export default function App() {
       <section>
         <h2>Confidential token (cUSDC from cdefi)</h2>
         <p className="muted">{CUSDC_HELP}</p>
+        <p className="muted" style={{ marginTop: 0 }}>
+          <strong>Default on Arbitrum Sepolia (official pair)</strong> — USDC:{' '}
+          <code>{DEFAULT_UNDERLYING}</code> · cUSDC: <code>{DEFAULT_CTOKEN}</code>. Override with{' '}
+          <code>VITE_CTOKEN_ADDRESS</code> or paste below.
+        </p>
         <label htmlFor="ctok">cToken (ERC-7984 wrapper) address</label>
         <input
           id="ctok"
@@ -215,6 +227,7 @@ export default function App() {
       ) : null}
 
       <ActivityLog log={ac.log} onClear={ac.clearLog} />
+      <IexecResourceLinks />
       <ExplorerHint />
     </div>
   )

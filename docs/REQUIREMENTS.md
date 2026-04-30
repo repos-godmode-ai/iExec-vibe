@@ -13,7 +13,7 @@ This file keeps the **DoraHacks / iExec Vibe Coding Challenge** rules and our **
 | # | Requirement | How PrivaRWA satisfies it | Evidence |
 |---|-------------|---------------------------|----------|
 | 1 | **Nox + Confidential Token** — app must use iExec Nox and Confidential Tokens with a real role (e.g. rewards, governance, private payment, in-app currency, access control) | **Private payment / settlement:** users hold **ERC-7984 cUSDC**, fund an escrow with **encrypted amount** (`encryptInput` + `confidentialTransfer`), settle with `confidentialTransferFrom` from the escrow contract | Front end + `RwaConfidentialEscrow` + `RwaConfidentialEscrowFactory` |
-| 2 | **No mock-only data** — end-to-end must not rely on fake chain data for submission | Flow uses **Arbitrum Sepolia** RPC, real cToken, real Nox gateway when you connect a wallet | Run on testnet with real addresses |
+| 2 | **No mock-only data** — end-to-end must not rely on fake chain data for submission | Flow uses **Arbitrum Sepolia** RPC, real cToken, real Nox gateway when you connect a wallet | Run on testnet; app defaults to **official** USDC / cUSDC on 421614 (see [GETTING_STARTED.md](./GETTING_STARTED.md)) or your own from the [cdefi wizard](https://cdefi-wizard.iex.ec) |
 | 3 | **Deployed on Arbitrum Sepolia or Arbitrum** | **Factory + escrow** are meant to be deployed to **421614**; default RPC and Wagmi chain are Sepolia | `forge script` in README; env `VITE_FACTORY_ADDRESS` |
 | 4 | **`feedback.md` in the repo** | [../feedback.md](../feedback.md) | Committed file |
 | 5 | **4 minute max demo video** | Not in git — you record: connect → network → cToken → (optional) deploy factory → create escrow → wrap → fund → release/refund | Loom / screen record |

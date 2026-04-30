@@ -205,6 +205,17 @@ input[type='text'] {
   color: #5fd48a;
   border-color: #2a4a38;
 }
+.iexec-links .iexec-links-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.15rem;
+  color: #9aa0a6;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.iexec-links .iexec-links-list a {
+  color: #8ec8ff;
+}
+
 .wallet-row {
   display: flex;
   flex-wrap: wrap;
