@@ -1,0 +1,32 @@
+{
+  "lib/encrypted-types": {
+    "tag": {
+      "name": "v0.4.0",
+      "rev": "7599b268ac025e38b86531eea98e400be9fb87c1"
+    }
+  },
+  "lib/forge-std": {
+    "tag": {
+      "name": "v1.16.0",
+      "rev": "8987040ede9553cea20c95ad40d0455930f9c8e0"
+    }
+  },
+  "lib/nox-confidential-contracts": {
+    "tag": {
+      "name": "v0.1.0",
+      "rev": "4f2fbab978f104d5a537b4f11d0b8ce934f7a025"
+    }
+  },
+  "lib/nox-protocol-contracts": {
+    "tag": {
+      "name": "v0.2.2",
+      "rev": "eb0baa7fb3962506a47159251e940bccfd4c4d84"
+    }
+  },
+  "lib/openzeppelin-contracts": {
+    "tag": {
+      "name": "v5.0.2",
+      "rev": "dbb6104ce834628e473d2173bbc9d47f81a9eec3"
+    }
+  }
+}
