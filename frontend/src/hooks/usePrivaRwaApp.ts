@@ -25,6 +25,7 @@ import { isEmptyHandle, toAddress } from '../lib/address'
 import { formatAmountLabel, shortHandle, shortHex } from '../lib/format'
 import { parseEscrowFromLogs } from '../lib/parseFactoryEvent'
 import { checklistFundDone, checklistWrapDone } from '../lib/checklistProgress'
+import { getNextDemoHint } from '../lib/nextDemoHint'
 import { useActivityLog } from './useActivityLog'
 import { useWithBusy } from './useWithBusy'
 import { formatTxError } from '../lib/txError'
@@ -423,6 +424,34 @@ export function usePrivaRwaApp() {
     [fundedThisEscrow, cValid, escrow, hEscrow],
   )
 
+  const nextDemoHint = useMemo(
+    () =>
+      getNextDemoHint({
+        isConnected,
+        needSwitch,
+        chainId,
+        targetChainId: defaultChain.id,
+        cValid,
+        factoryInput: factory,
+        factoryFromEnv,
+        escrow,
+        wrapStepDone,
+        fundStepDone,
+        settled,
+      }),
+    [
+      isConnected,
+      needSwitch,
+      chainId,
+      cValid,
+      factory,
+      escrow,
+      wrapStepDone,
+      fundStepDone,
+      settled,
+    ],
+  )
+
   return {
     address,
     isConnected,
@@ -476,6 +505,7 @@ export function usePrivaRwaApp() {
     wrapStepDone,
     fundStepDone,
     settled,
+    nextDemoHint,
     isBuyer,
     isSeller,
     fundAmount,

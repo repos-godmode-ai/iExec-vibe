@@ -3,6 +3,7 @@ import { CUSDC_HELP, defaultChain, explorerBase } from './config'
 import { usePrivaRwaApp } from './hooks/usePrivaRwaApp'
 import { ActivityLog, ExplorerHint, WalletBar } from './components/WalletBar'
 import { SubmissionChecklist } from './components/SubmissionChecklist'
+import { NextStepsPanel } from './components/NextStepsPanel'
 
 export default function App() {
   const ac = usePrivaRwaApp()
@@ -28,6 +29,8 @@ export default function App() {
         fundStepDone={ac.fundStepDone}
         settled={ac.settled}
       />
+
+      <NextStepsPanel nextHint={ac.nextDemoHint} />
 
       <WalletBar
         isConnected={ac.isConnected}

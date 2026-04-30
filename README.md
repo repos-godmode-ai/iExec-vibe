@@ -15,6 +15,7 @@ End-to-end dApp for the [iExec Vibe Coding Challenge](https://dorahacks.io/hacka
 | Arbitrum Sepolia deployment | You deploy the factory; app reads live contracts |
 | `feedback.md` | [feedback.md](./feedback.md) |
 | Full rules, checklist, glossary | [docs/REQUIREMENTS.md](./docs/REQUIREMENTS.md) |
+| **Run the app (prerequisites, two wallets, troubleshooting)** | [docs/GETTING_STARTED.md](./docs/GETTING_STARTED.md) |
 | AI / vibe coding trace | [docs/AI_TRACES.md](./docs/AI_TRACES.md) |
 | 4 min video | Record a screen capture of: connect → wrap → create escrow → fund (encrypted) → release/refund (record locally; not in repo) |
 
@@ -28,6 +29,7 @@ RWA buyers and issuers need **settlement** without advertising exact ticket size
 contracts/          Foundry: escrow + factory; lib/ = git submodules
 frontend/           Vite + React + Wagmi + @iexec-nox/handle
 docs/REQUIREMENTS.md  DoraHacks rules, scope, demo checklist
+docs/GETTING_STARTED.md  Prerequisites, env, two-wallet demo, troubleshooting
 docs/AI_TRACES.md   Cursor / AI build log
 feedback.md         iExec tooling feedback
 ```

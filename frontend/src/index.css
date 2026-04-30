@@ -168,6 +168,15 @@ input[type='text'] {
   color: #6d7379;
   margin: 0.4rem 0 0;
 }
+
+.next-steps .next-steps-hint {
+  font-size: 0.95rem;
+  color: #c8cdd4;
+  margin-bottom: 0.65rem;
+}
+.next-steps-hint--ok {
+  color: #8fbc9c;
+}
 .checklist-item {
   display: flex;
   align-items: flex-start;

@@ -4,6 +4,8 @@ This file keeps the **DoraHacks / iExec Vibe Coding Challenge** rules and our **
 
 **Official brief:** [iExec Vibe Coding Challenge on DoraHacks](https://dorahacks.io/hackathon/vibe-coding-iexec/detail)
 
+**Practical runbook (env, two wallets, troubleshooting):** [GETTING_STARTED.md](./GETTING_STARTED.md)
+
 ---
 
 ## 1. Challenge rules (must ship)
