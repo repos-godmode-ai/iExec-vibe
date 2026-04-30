@@ -1,0 +1,27 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { WagmiProvider } from 'wagmi'
+import { wagmiConfig } from './wagmiConfig'
+import './index.css'
+import App from './App.tsx'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      refetchOnWindowFocus: false,
+      staleTime: 12_000,
+    },
+  },
+})
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </WagmiProvider>
+  </StrictMode>,
+)
